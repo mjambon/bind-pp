@@ -1,0 +1,1 @@
+description = "Syntax for >>= (Lwt bind with exception backtrace)"
