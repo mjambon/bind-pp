@@ -1,1 +1,4 @@
 description = "Syntax for >>= (Lwt bind with exception backtrace)"
+archive(byte) = "pa_bind_runtime.cmo"
+archive(native) = "pa_bind_runtime.cmx"
+archive(native,plugin) = "pa_bind_runtime.cmxs"

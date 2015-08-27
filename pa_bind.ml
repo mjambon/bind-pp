@@ -1,6 +1,6 @@
 (*
-  Enable exception tracing by replacing calls to the Lwt bind operator >>=
-  by a call that records the source code location.
+   Enable exception tracing by replacing calls to the Lwt bind operator >>=
+   by a call that records the source code location.
 *)
 
 open Camlp4
@@ -12,7 +12,7 @@ let map_anonymous_bind = object
   method expr e = match super#expr e with
     | <:expr@_loc< $lid:f$ $a$ $b$ >> when f = ">>=" ->
         <:expr< Lwt.backtrace_bind
-                   (fun e -> try raise e with e -> e)
+                   (fun e -> try Pa_bind_runtime.reraise e with e -> e)
                    $a$ $b$ >>
     | e -> e
 end
