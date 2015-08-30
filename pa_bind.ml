@@ -7,13 +7,26 @@ open Camlp4
 open Camlp4.PreCast
 open Syntax
 
+let string_of_loc loc =
+  let start = Loc.start_pos loc in
+  let stop = Loc.stop_pos loc in
+  let open Lexing in
+  let char1 = start.pos_cnum - start.pos_bol in
+  let char2 = char1 + stop.pos_cnum - start.pos_cnum - 1 in
+  Printf.sprintf "File %S, line %i, characters %i-%i"
+    start.pos_fname
+    start.pos_lnum
+    char1 char2
+
 let map_anonymous_bind = object
   inherit Ast.map as super
   method expr e = match super#expr e with
     | <:expr@_loc< $lid:f$ $a$ $b$ >> when f = ">>=" ->
-        <:expr< Lwt.backtrace_bind
-                   (fun e -> try Pa_bind_runtime.reraise e with e -> e)
-                   $a$ $b$ >>
+        let b_loc =
+          String.escaped (string_of_loc (Ast.loc_of_expr b))
+        in
+        <:expr< Lwt.bind $a$ (Pa_bind_runtime.wrap_thread $b$ $str:b_loc$) >>
+
     | e -> e
 end
 

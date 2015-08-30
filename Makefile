@@ -32,13 +32,14 @@ pa_bind.cmxs: pa_bind.ml
 	ocamlopt -shared -o pa_bind.cmxs pa_bind.cmx
 
 pa_bind_runtime.cmo: pa_bind_runtime.ml
-	ocamlc -c -g pa_bind_runtime.ml
+	ocamlfind ocamlc -c -g pa_bind_runtime.ml -package lwt,trax
 
 pa_bind_runtime.cmx: pa_bind_runtime.ml
-	ocamlopt -c -g pa_bind_runtime.ml
+	ocamlfind ocamlopt -c -g pa_bind_runtime.ml -package lwt,trax
 
 pa_bind_runtime.cmxs: pa_bind_runtime.cmx
-	ocamlopt -shared -o pa_bind_runtime.cmxs pa_bind_runtime.cmx
+	ocamlfind ocamlopt -shared -o pa_bind_runtime.cmxs \
+	  pa_bind_runtime.cmx -package lwt,trax
 
 .PHONY: clean
 clean:
