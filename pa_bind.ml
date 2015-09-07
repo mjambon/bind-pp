@@ -22,10 +22,12 @@ let map_anonymous_bind = object
   inherit Ast.map as super
   method expr e = match super#expr e with
     | <:expr@_loc< $lid:f$ $a$ $b$ >> when f = ">>=" ->
-        let b_loc =
-          String.escaped (string_of_loc (Ast.loc_of_expr b))
+        let b_expr =
+          let _loc = Ast.loc_of_expr b in
+          let loc_s = String.escaped (string_of_loc _loc) in
+          <:expr< Pa_bind_runtime.wrap_thread $b$ $str:loc_s$ >>
         in
-        <:expr< Lwt.bind $a$ (Pa_bind_runtime.wrap_thread $b$ $str:b_loc$) >>
+        <:expr< Lwt.bind $a$ $b_expr$ >>
 
     | e -> e
 end

@@ -5,3 +5,4 @@ bind-pp
 *.cmx
 *.cmxs
 *.o
+*~
